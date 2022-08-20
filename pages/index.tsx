@@ -4,12 +4,22 @@ import { css } from '@emotion/react';
 import * as colors from '@/styles/colors';
 
 const container = css({
-  minHeight: '100vh',
   padding: '0 0.5rem',
+  height: 'auto',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
+
+  main: {
+    zIndex: 60,
+    marginTop: '-125px',
+    padding: '5rem 0',
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
 });
 
 const title = css({
@@ -19,6 +29,7 @@ const title = css({
   textAlign: 'center',
 
   a: {
+    tarnsition: 'all 0.2s',
     color: colors.magenta,
     textDecoration: 'none',
     ':hover, :focus, :active': {
@@ -37,7 +48,7 @@ export default function Home() {
 
       <main>
         <h1 css={title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
+          Welcome to <a href="https://nextjs.org">Kitsune!</a>
         </h1>
       </main>
     </div>
