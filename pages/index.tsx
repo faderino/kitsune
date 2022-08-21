@@ -4,6 +4,7 @@ import { css } from '@emotion/react';
 import * as colors from '@/styles/colors';
 
 const container = css({
+  minHeight: '200vh',
   padding: '0 0.5rem',
   height: 'auto',
   display: 'flex',
@@ -13,12 +14,12 @@ const container = css({
 
   main: {
     zIndex: 60,
-    marginTop: '-125px',
     padding: '5rem 0',
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 

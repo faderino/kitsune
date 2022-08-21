@@ -1,10 +1,13 @@
-import type { AppProps } from 'next/app';
 import { css, Global } from '@emotion/react';
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 
 import HeaderNav from '@/components/header-nav';
 import BottomNav from '@/components/bottom-nav';
 import * as colors from '@/styles/colors';
+
+import type { AppProps } from 'next/app';
+import type { NextPage } from 'next';
+import type { HeaderProps } from '@/components/header-nav';
 
 const globalStyles = css({
   'html, body': {
@@ -28,12 +31,23 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-export default function MyApp({ Component, pageProps }: AppProps) {
+type AppPropsWithHeaderProps = AppProps & {
+  Component: NextPage & {
+    headerProps?: HeaderProps;
+  };
+};
+
+export default function MyApp({
+  Component,
+  pageProps,
+}: AppPropsWithHeaderProps) {
+  const headerProps = Component.headerProps || {};
+
   return (
     <>
       <Global styles={globalStyles} />
       <ApolloProvider client={client}>
-        <HeaderNav />
+        <HeaderNav {...headerProps} />
         <Component {...pageProps} />
         <BottomNav />
       </ApolloProvider>

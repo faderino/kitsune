@@ -1,40 +1,45 @@
+import styled from '@emotion/styled';
+import { css } from '@emotion/react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { css } from '@emotion/react';
 
 import * as colors from '@/styles/colors';
 import * as mq from '@/styles/media-queries';
 
-const container = css({
-  position: 'relative',
-  paddingTop: '40px',
-  width: '100%',
-  height: '233px',
-  backgroundColor: colors.indigo,
-  userSelect: 'none',
-});
-
-const background = css({
-  backgroundPosition: '50%',
-  backgroundRepeat: 'no-repeat',
-  backgroundSize: 'cover',
-  height: '100%',
-  left: 0,
-  opacity: 0,
-  position: 'absolute',
-  top: 0,
-  transition: 'opacity .5s ease-in-out',
-  width: '100%',
-  zIndex: 10,
-});
+type ContainerProps = {
+  background?: string;
+  scrolledPastHeader: boolean;
+};
+const Container = styled.header<ContainerProps>(
+  {
+    position: 'fixed',
+    display: 'flex',
+    justifyContent: 'center',
+    left: 0,
+    height: '75px',
+    width: '100%',
+    zIndex: 999,
+    transition: 'background 0.8s ease 0s, top 0.5s ease 0s',
+    userSelect: 'none',
+    ':hover': {
+      background: colors.indigo,
+    },
+  },
+  (props) => ({
+    background: props.background ?? colors.indigo,
+    top: props.scrolledPastHeader ? '-75px' : 0,
+  })
+);
 
 const wrap = css({
-  position: 'relative',
-  zIndex: 30,
+  display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  display: 'flex',
-  margin: '0 12vw',
+  margin: '0 50px',
+  height: '100%',
+  width: '100%',
+  maxWidth: '1050px',
 
   [mq.sm]: {
     justifyContent: 'space-between',
@@ -64,10 +69,24 @@ const navigation = css({
   },
 });
 
-export default function HeaderNav() {
+export type HeaderProps = {
+  background?: string;
+};
+
+export default function HeaderNav({ background }: HeaderProps) {
+  const [scrolledPastHeader, setScrolledPastHeader] = useState(false);
+
+  useEffect(() => {
+    const handler = () => {
+      setScrolledPastHeader(window.scrollY > 75);
+    };
+    document.addEventListener('scroll', handler);
+
+    return () => document.removeEventListener('scroll', handler);
+  }, []);
+
   return (
-    <header css={container}>
-      <div css={background} />
+    <Container background={background} scrolledPastHeader={scrolledPastHeader}>
       <div css={wrap}>
         <Link href={'/'}>
           <a
@@ -104,6 +123,6 @@ export default function HeaderNav() {
           </Link>
         </nav>
       </div>
-    </header>
+    </Container>
   );
 }
