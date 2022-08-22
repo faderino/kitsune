@@ -24,7 +24,7 @@ const navigation = css({
   justifyContent: 'space-evenly',
   borderRadius: '5px',
   height: '55px',
-  backgroundColor: colors.indigo,
+  backgroundColor: colors.dark,
 });
 
 const navText = css({

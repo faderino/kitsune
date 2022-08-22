@@ -8,6 +8,7 @@ import * as colors from '@/styles/colors';
 import type { AppProps } from 'next/app';
 import type { NextPage } from 'next';
 import type { HeaderProps } from '@/components/header-nav';
+import { ApolloClientProvider } from 'utils/apollo';
 
 const globalStyles = css({
   'html, body': {
@@ -16,6 +17,7 @@ const globalStyles = css({
     fontFamily:
       'Roboto, -apple-system, BlinkMacSystemFont, Segoe UI, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif',
     color: colors.text,
+    background: colors.base,
   },
   '*': {
     boxSizing: 'border-box',
@@ -24,11 +26,6 @@ const globalStyles = css({
     color: 'inherit',
     textDecoration: 'none',
   },
-});
-
-const client = new ApolloClient({
-  uri: 'https://graphql.anilist.co/',
-  cache: new InMemoryCache(),
 });
 
 type AppPropsWithHeaderProps = AppProps & {
@@ -46,11 +43,11 @@ export default function MyApp({
   return (
     <>
       <Global styles={globalStyles} />
-      <ApolloProvider client={client}>
+      <ApolloClientProvider>
         <HeaderNav {...headerProps} />
         <Component {...pageProps} />
         <BottomNav />
-      </ApolloProvider>
+      </ApolloClientProvider>
     </>
   );
 }

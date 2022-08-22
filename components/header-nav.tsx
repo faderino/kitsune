@@ -23,11 +23,11 @@ const Container = styled.header<ContainerProps>(
     transition: 'background 0.8s ease 0s, top 0.5s ease 0s',
     userSelect: 'none',
     ':hover': {
-      background: colors.indigo,
+      background: colors.dark,
     },
   },
   (props) => ({
-    background: props.background ?? colors.indigo,
+    background: props.background ?? colors.dark,
     top: props.scrolledPastHeader ? '-75px' : 0,
   })
 );
@@ -77,12 +77,9 @@ export default function HeaderNav({ background }: HeaderProps) {
   const [scrolledPastHeader, setScrolledPastHeader] = useState(false);
 
   useEffect(() => {
-    const handler = () => {
+    document.addEventListener('scroll', () => {
       setScrolledPastHeader(window.scrollY > 75);
-    };
-    document.addEventListener('scroll', handler);
-
-    return () => document.removeEventListener('scroll', handler);
+    });
   }, []);
 
   return (
