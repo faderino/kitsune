@@ -13,7 +13,7 @@ const container = css({
   padding: '2rem 1rem 1rem 1rem',
   zIndex: 999,
 
-  [mq.sm]: {
+  [mq.md]: {
     display: 'none',
   },
 });

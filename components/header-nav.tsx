@@ -36,10 +36,9 @@ const wrap = css({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  margin: '0 50px',
   height: '100%',
   width: '100%',
-  maxWidth: '1050px',
+  maxWidth: '1240px',
 
   [mq.sm]: {
     justifyContent: 'space-between',
@@ -51,7 +50,7 @@ const navigation = css({
   justifyContent: 'center',
   display: 'none',
 
-  [mq.sm]: {
+  [mq.md]: {
     display: 'inline-flex',
   },
 

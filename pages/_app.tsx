@@ -26,6 +26,9 @@ const globalStyles = css({
     color: 'inherit',
     textDecoration: 'none',
   },
+  h1: {
+    fontSize: '2rem',
+  }
 });
 
 type AppPropsWithHeaderProps = AppProps & {

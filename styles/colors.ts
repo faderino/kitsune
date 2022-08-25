@@ -6,3 +6,5 @@ export const text = '#242424';
 export const textLighten = '#6c6c6c';
 export const textLight = '#bcbedc';
 export const seeThrough = 'rgba(35, 38, 67, 0.5)';
+export const filter = '#fbfbfb';
+export const shadow = '103, 132, 187';

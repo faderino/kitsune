@@ -1,25 +1,32 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import styled from '@emotion/styled';
-import { Anime } from '@/pages/index';
 import { css } from '@emotion/react';
+import { useState } from 'react';
+import { Anime } from '@/pages/index';
 import * as colors from '@/styles/colors';
 import * as mq from '@/styles/media-queries';
 
 const Card = styled.div<{ color: string }>(
   {
-    display: 'grid',
-    gridTemplateRows: '155px auto',
+    // display: 'grid',
+    // gridTemplateRows: 'calc(min-content + 30px) auto',
+    display: 'flex',
+    flexDirection: 'column',
     width: '100%',
 
-    [mq.md]: {
-      gridTemplateRows: '185px auto',
-    },
+    // [mq.xs]: {
+    //   gridTemplateRows: '3.5fr 1fr',
+    // },
 
-    [mq.lg]: {
-      gridTemplateRows: '256px auto',
-      width: '185px',
-    },
+    // [mq.md]: {
+    //   gridTemplateRows: '185px auto',
+    // },
+
+    // [mq.lg]: {
+    //   gridTemplateRows: '256px auto',
+    //   width: '185px',
+    // },
   },
   (props) => ({
     ':hover': {
@@ -30,25 +37,12 @@ const Card = styled.div<{ color: string }>(
   })
 );
 
-const Cover = styled.div<{ background: string }>(
-  (props) => ({
-    background: props.background,
-  }),
-  {
-    position: 'relative',
-    display: 'inline-block',
-    borderRadius: '5px',
-    height: '100%',
-    width: '100%',
-    overflow: 'hidden',
-  }
-);
-
-const image = css({
-  height: '100%',
+const cover = css({
+  position: 'relative',
+  borderRadius: '5px',
+  paddingTop: '130%',
   width: '100%',
-  objectFit: 'cover',
-  verticalAlign: 'text-top',
+  overflow: 'hidden',
 });
 
 const title = css({
@@ -65,25 +59,46 @@ const title = css({
   transition: 'color 0.2s',
 });
 
+const shimmer = (w: number, h: number, color: string) => `
+<svg width="${w}" height="${h}" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    <linearGradient id="g">
+      <stop stop-color="${color}" offset="20%" />
+      <stop stop-color="${color}" offset="50%" />
+      <stop stop-color="${color}" offset="70%" />
+    </linearGradient>
+  </defs>
+  <rect width="${w}" height="${h}" fill="${color}" />
+  <rect id="r" width="${w}" height="${h}" fill="url(#g)" />
+  <animate xlink:href="#r" attributeName="x" from="-${w}" to="${w}" dur="1s" repeatCount="indefinite"  />
+</svg>`;
+
+const toBase64 = (str: string) =>
+  typeof window === 'undefined'
+    ? Buffer.from(str).toString('base64')
+    : window.btoa(str);
+
 export default function AnimeCard({ anime }: { anime: Anime }) {
+  const [imgLoading, setImgLoading] = useState(true);
   return (
     <Link href={'/'}>
       <a>
         <Card color={anime.coverImage.color}>
-          <Cover background={anime.coverImage.color}>
-            <img
-              src={anime.coverImage.extraLarge}
-              alt={anime.title.english}
-              css={image}
-            />
-            {/* <Image
+          <div css={cover}>
+            <Image
               src={anime.coverImage.extraLarge}
               alt={anime.title.english}
               layout="fill"
               objectFit="cover"
-              css={image}
-            /> */}
-          </Cover>
+              placeholder="blur"
+              blurDataURL={`data:image/svg+xml;base64,${toBase64(
+                shimmer(700, 475, colors.textLight)
+              )}`}
+              onLoadingComplete={() => {
+                setImgLoading(false);
+              }}
+            />
+          </div>
 
           <div css={title}>{anime.title.english}</div>
         </Card>
