@@ -11,7 +11,7 @@ import * as mq from '@/styles/media-queries';
 import { FilterGroup, FilterInput, SearchInput } from '@/components/filter';
 import { FaChevronDown, FaSearch } from 'react-icons/fa';
 import { Button } from '@/components/lib';
-import { useWindowDimensions } from 'utils/window';
+import { useBreakpoint } from 'utils/window';
 
 const container = css({
   margin: '75px auto 0 auto',
@@ -20,6 +20,10 @@ const container = css({
   minWidth: '320px',
   maxWidth: '1040px',
   minHeight: '120vh',
+
+  [mq.sm]: {
+    padding: '0 20px',
+  },
 
   [mq.xl]: {
     maxWidth: '1240px',
@@ -50,12 +54,12 @@ const grid = css({
 
   [mq.lg]: {
     gridTemplateColumns: 'repeat(auto-fill, minmax(155px, 1fr))',
-    justifyContent: 'space-between',
+    gap: '40px 32px',
   },
 
   [mq.xl]: {
     gridTemplateColumns: 'repeat(auto-fill, minmax(165px, 1fr))',
-    justifyContent: 'space-between',
+    gap: '40px 32px',
   },
 });
 
@@ -63,14 +67,23 @@ const headerText = css({
   color: colors.textLighten,
   margin: '35px 0 0 0',
   paddingBottom: '30px',
+  textAlign: 'center',
+
+  [mq.sm]: {
+    textAlign: 'left',
+  },
 });
 
 const filters = css({
   display: 'grid',
-  gridTemplateColumns: 'repeat(5, 1fr)',
+  gridTemplateColumns: '1fr',
   alignItems: 'center',
   gap: '24px',
   marginBottom: '25px',
+
+  [mq.md]: {
+    gridTemplateColumns: 'repeat(5, 1fr)',
+  },
 });
 
 export interface PageInfo {
@@ -133,7 +146,7 @@ export default function Home({
   page: PageInfo;
   animeList: Anime[];
 }) {
-  const { width: screenWidth, height: screenHight } = useWindowDimensions();
+  const breakpoint = useBreakpoint();
   const [animes, setAnimes] = useState(animeList);
   const [currentPage, setCurrentPage] = useState(page.currentPage);
   const [hasNextPage, setHasNextPage] = useState(page.hasNextPage);
@@ -142,7 +155,6 @@ export default function Home({
     const data = await fetch(
       `${window.location.origin}/api/anime-list/${currentPage + 1}`
     ).then((res) => res.json());
-    console.log(data);
     setAnimes((animes) => [...animes, ...data.Page.media]);
     setCurrentPage(data.Page.pageInfo.currentPage);
     setHasNextPage(data.Page.pageInfo.hasNextPage);
@@ -170,7 +182,7 @@ export default function Home({
             ></SearchInput>
           </FilterGroup>
 
-          {screenWidth && screenWidth >= mq.breakpoints.lg && (
+          {breakpoint.mdAndUp && (
             <>
               <FilterGroup label="Genre">
                 <FilterInput

@@ -1,32 +1,30 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import styled from '@emotion/styled';
-import { css } from '@emotion/react';
-import { useState } from 'react';
+import { css, keyframes } from '@emotion/react';
 import { Anime } from '@/pages/index';
 import * as colors from '@/styles/colors';
 import * as mq from '@/styles/media-queries';
 
+const cardAnimation = keyframes({
+  '0%': {
+    opacity: 0,
+    transform: 'scale(0.9)',
+  },
+  '60%': {
+    opacity: 1,
+  },
+  '100%': {
+    transform: 'none',
+  },
+});
+
 const Card = styled.div<{ color: string }>(
   {
-    // display: 'grid',
-    // gridTemplateRows: 'calc(min-content + 30px) auto',
     display: 'flex',
     flexDirection: 'column',
     width: '100%',
-
-    // [mq.xs]: {
-    //   gridTemplateRows: '3.5fr 1fr',
-    // },
-
-    // [mq.md]: {
-    //   gridTemplateRows: '185px auto',
-    // },
-
-    // [mq.lg]: {
-    //   gridTemplateRows: '256px auto',
-    //   width: '185px',
-    // },
+    animation: `${cardAnimation} 0.3s linear`,
   },
   (props) => ({
     ':hover': {
@@ -79,9 +77,8 @@ const toBase64 = (str: string) =>
     : window.btoa(str);
 
 export default function AnimeCard({ anime }: { anime: Anime }) {
-  const [imgLoading, setImgLoading] = useState(true);
   return (
-    <Link href={'/'}>
+    <Link href={`/anime/${anime.id}`}>
       <a>
         <Card color={anime.coverImage.color}>
           <div css={cover}>
@@ -94,9 +91,6 @@ export default function AnimeCard({ anime }: { anime: Anime }) {
               blurDataURL={`data:image/svg+xml;base64,${toBase64(
                 shimmer(700, 475, colors.textLight)
               )}`}
-              onLoadingComplete={() => {
-                setImgLoading(false);
-              }}
             />
           </div>
 

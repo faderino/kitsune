@@ -3,9 +3,9 @@ import { css } from '@emotion/react';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-
 import * as colors from '@/styles/colors';
 import * as mq from '@/styles/media-queries';
+import { useBreakpoint } from 'utils/window';
 
 type ContainerProps = {
   background?: string;
@@ -36,12 +36,24 @@ const wrap = css({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
+  padding: '0 20px',
   height: '100%',
   width: '100%',
   maxWidth: '1240px',
 
   [mq.sm]: {
     justifyContent: 'space-between',
+    padding: '0 20px',
+  },
+});
+
+const logoText = css({
+  fontWeight: '700',
+  fontSize: '1.5rem',
+  letterSpacing: '0.01rem',
+
+  [mq.sm]: {
+    fontSize: '1.8rem',
   },
 });
 
@@ -73,6 +85,7 @@ export type HeaderProps = {
 };
 
 export default function HeaderNav({ background }: HeaderProps) {
+  const breakpoint = useBreakpoint();
   const [scrolledPastHeader, setScrolledPastHeader] = useState(false);
 
   useEffect(() => {
@@ -90,24 +103,25 @@ export default function HeaderNav({ background }: HeaderProps) {
               alignItems: 'center',
               display: 'flex',
               width: 'fit-content',
-              fontWeight: '700',
-              fontSize: '1.5rem',
-              textTransform: 'uppercase',
-              letterSpacing: '0.1rem',
             }}
           >
             <Image
               src="/kitsune.png"
-              width="48"
-              height="43"
+              width={breakpoint.xsAndDown ? '30' : '38'}
+              height={breakpoint.xsAndDown ? '27' : '34'}
               layout="fixed"
               alt="logo"
               priority
             />
-            <span css={{ marginLeft: '0.7rem', color: colors.textLight }}>
+            <span
+              css={[
+                logoText,
+                { marginLeft: '0.7rem', color: colors.textLight },
+              ]}
+            >
               kitsu
             </span>
-            <span css={{ color: colors.magenta }}>ne</span>
+            <span css={[logoText, { color: colors.magenta }]}>ne</span>
           </a>
         </Link>
         <nav css={navigation}>

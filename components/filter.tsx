@@ -2,9 +2,10 @@ import * as colors from '@/styles/colors';
 
 interface FilterGroupProps {
   label: string;
+  className?: string;
   children: React.ReactNode;
 }
-function FilterGroup({ label, children }: FilterGroupProps) {
+function FilterGroup({ label, className, children }: FilterGroupProps) {
   return (
     <div>
       <div
@@ -14,6 +15,7 @@ function FilterGroup({ label, children }: FilterGroupProps) {
           fontWeight: '500',
           color: colors.textLighten,
         }}
+        className={className}
       >
         {label}
       </div>
