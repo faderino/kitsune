@@ -12,6 +12,7 @@ import { FilterGroup, FilterInput, SearchInput } from '@/components/filter';
 import { FaChevronDown, FaSearch } from 'react-icons/fa';
 import { Button } from '@/components/lib';
 import { useBreakpoint } from 'utils/window';
+import { Anime, PageInfo } from 'types/anime';
 
 const container = css({
   margin: '75px auto 0 auto',
@@ -85,59 +86,6 @@ const filters = css({
     gridTemplateColumns: 'repeat(5, 1fr)',
   },
 });
-
-export interface PageInfo {
-  currentPage: number;
-  hasNextPage: boolean;
-}
-
-export interface AnimeCoverImage {
-  extraLarge: string;
-  color: string;
-}
-
-export interface AnimeTitle {
-  english: string;
-  romaji: string;
-  native: string;
-}
-
-export interface AiringSchedule {
-  episode: number;
-  timeUntilAiring: number;
-}
-
-export interface FuzzyDate {
-  year: number;
-}
-export interface StudioConnection {
-  edges: StudioEdge[];
-}
-
-export interface StudioEdge {
-  node: Studio;
-}
-
-export interface Studio {
-  id: number;
-  name: string;
-  isAnimationStudio: boolean;
-}
-
-export interface Anime {
-  id: number;
-  coverImage: AnimeCoverImage;
-  title: AnimeTitle;
-  status: string;
-  nextAiringEpisode: AiringSchedule;
-  seasonYear: number;
-  endDate: FuzzyDate;
-  meanScore: number;
-  studios: StudioConnection;
-  format: string;
-  episodes: number;
-  genres: string[];
-}
 
 export default function Home({
   page,

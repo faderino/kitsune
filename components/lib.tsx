@@ -1,25 +1,33 @@
 import * as colors from '@/styles/colors';
 
-const btnColor = {
-  primary: '#1446A0',
-};
-
 type Icon = React.ReactNode;
 interface ButtonProps {
-  color: string;
+  color?: string;
   icon?: Icon;
   prependIcon?: Icon;
   appendIcon?: Icon;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 function Button({
-  color = btnColor.primary,
+  color = colors.primary,
   icon,
   prependIcon,
   appendIcon,
   children,
 }: ButtonProps) {
-  return <button>{children}</button>;
+  return (
+    <button
+      css={{
+        background: color,
+        border: 'none',
+        borderRadius: '3px',
+        outline: 'none',
+        color: colors.white,
+      }}
+    >
+      {children}
+    </button>
+  );
 }
 
 export { Button };

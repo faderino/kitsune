@@ -1,14 +1,12 @@
 import { css, Global } from '@emotion/react';
-import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
-
-import HeaderNav from '@/components/header-nav';
-import BottomNav from '@/components/bottom-nav';
-import * as colors from '@/styles/colors';
-
 import type { AppProps } from 'next/app';
 import type { NextPage } from 'next';
 import type { HeaderProps } from '@/components/header-nav';
 import { ApolloClientProvider } from 'utils/apollo';
+import HeaderNav from '@/components/header-nav';
+import BottomNav from '@/components/bottom-nav';
+import * as colors from '@/styles/colors';
+import { useBreakpoint } from 'utils/window';
 
 const globalStyles = css({
   'html, body': {
@@ -26,9 +24,18 @@ const globalStyles = css({
     color: 'inherit',
     textDecoration: 'none',
   },
+  'h1, h2, h3, h4, h5': {
+    margin: '0',
+  },
   h1: {
     fontSize: '2rem',
-  }
+  },
+  button: {
+    border: 'none',
+    borderRadius: '3px',
+    padding: '0',
+    cursor: 'pointer',
+  },
 });
 
 type AppPropsWithHeaderProps = AppProps & {
@@ -41,6 +48,7 @@ export default function MyApp({
   Component,
   pageProps,
 }: AppPropsWithHeaderProps) {
+  const breakpoint = useBreakpoint();
   const headerProps = Component.headerProps || {};
 
   return (
@@ -50,6 +58,11 @@ export default function MyApp({
         <HeaderNav {...headerProps} />
         <Component {...pageProps} />
         <BottomNav />
+        <div
+          css={{
+            paddingTop: breakpoint.mdAndDown ? '80px' : '0',
+          }}
+        ></div>
       </ApolloClientProvider>
     </>
   );

@@ -94,7 +94,7 @@ export default function AnimeCard({ anime }: { anime: Anime }) {
             />
           </div>
 
-          <div css={title}>{anime.title.english}</div>
+          <div css={title}>{anime.title.english || anime.title.romaji || anime.title.native}</div>
         </Card>
       </a>
     </Link>
