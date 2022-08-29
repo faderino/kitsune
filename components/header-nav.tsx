@@ -128,8 +128,8 @@ export default function HeaderNav({ background }: HeaderProps) {
           <Link href={'/'}>
             <a>browse</a>
           </Link>
-          <Link href={'/collections'}>
-            <a>collections</a>
+          <Link href={'/collection'}>
+            <a>collection</a>
           </Link>
         </nav>
       </div>

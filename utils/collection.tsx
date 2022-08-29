@@ -14,11 +14,11 @@ const collectionReducer = (
       if (state[action.payload.name]) {
         newAnimeList = [...state[action.payload.name], action.payload.anime];
       } else {
-        newAnimeList = [action.payload.anime];
+        newAnimeList = action.payload.anime ? [action.payload.anime] : [];
       }
       const newCollection = {
         ...state,
-        [action.payload!.name]: newAnimeList,
+        [action.payload.name]: newAnimeList,
       };
 
       window.localStorage.setItem('collection', JSON.stringify(newCollection));

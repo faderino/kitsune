@@ -212,6 +212,7 @@ export default function AnimeDetailPage({ anime }: { anime: Anime }) {
       },
     });
     e.target.elements.name.value = '';
+    toggleDropdown(!showDropdown);
   };
 
   return (
@@ -340,15 +341,16 @@ export default function AnimeDetailPage({ anime }: { anime: Anime }) {
                               }}
                             >
                               <FaPlus
-                                onClick={() =>
+                                onClick={() => {
                                   dispatch({
                                     type: 'add',
                                     payload: {
                                       name,
                                       anime,
                                     },
-                                  })
-                                }
+                                  });
+                                  toggleDropdown(!showDropdown);
+                                }}
                                 size={14}
                                 css={{ cursor: 'pointer' }}
                               />
