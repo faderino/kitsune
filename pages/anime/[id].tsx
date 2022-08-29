@@ -5,13 +5,15 @@ import * as colors from '@/styles/colors';
 import * as mq from '@/styles/media-queries';
 import { GetServerSideProps, GetStaticProps } from 'next';
 import Image from 'next/image';
-import { FaChevronDown, FaHeart } from 'react-icons/fa';
+import { FaChevronDown, FaHeart, FaPlus, FaPlusCircle } from 'react-icons/fa';
 import { Button } from '@/components/lib';
 import { Anime } from 'types/anime';
 import CharacterCard from '@/components/anime/character-card';
 import Card from '@/components/anime/card';
 import { useBreakpoint } from 'utils/window';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useCollection } from 'utils/collection';
+import { GoPrimitiveDot } from 'react-icons/go';
 
 const banner = css({
   backgroundPosition: '50% 35%',
@@ -46,6 +48,7 @@ const header = css({
 });
 
 const cover = css({
+  position: 'relative',
   display: 'grid',
   gridTemplateColumns: '165px 35px',
   margin: '20px 0',
@@ -129,9 +132,6 @@ const main = css({
 });
 
 const sidebar = css({
-  // display: 'flex',
-  // flexWrap: 'nowrap',
-  // overflowX: 'scroll',
   borderRadius: '3px',
   padding: '18px',
   background: colors.white,
@@ -182,6 +182,10 @@ function DetailListItem({
 }
 
 export default function AnimeDetailPage({ anime }: { anime: Anime }) {
+  const [collection, dispatch] = useCollection();
+  const [showDropdown, toggleDropdown] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+
   const getEmojiAndColor = (score: number) => {
     if (score >= 80) {
       return ['😃', colors.green];
@@ -192,6 +196,22 @@ export default function AnimeDetailPage({ anime }: { anime: Anime }) {
     } else {
       return ['😭', colors.red];
     }
+  };
+
+  const addToCollection = (
+    e: React.FormEvent<HTMLFormElement>,
+    anime: Anime
+  ) => {
+    e.preventDefault();
+    const name = e.target.elements.name.value;
+    dispatch({
+      type: 'add',
+      payload: {
+        name,
+        anime,
+      },
+    });
+    e.target.elements.name.value = '';
   };
 
   return (
@@ -220,7 +240,10 @@ export default function AnimeDetailPage({ anime }: { anime: Anime }) {
             </div>
 
             <div css={cover}>
-              <div css={dropButton}>
+              <div
+                css={dropButton}
+                onClick={() => toggleDropdown(!showDropdown)}
+              >
                 <button
                   css={{
                     height: '100%',
@@ -242,6 +265,174 @@ export default function AnimeDetailPage({ anime }: { anime: Anime }) {
                   <FaChevronDown color="white" />
                 </button>
               </div>
+
+              {showDropdown && (
+                <div
+                  css={{
+                    position: 'absolute',
+                    zIndex: '4000',
+                    top: 'calc(100% + 8px)',
+                    right: '50px',
+                    padding: '8px 0',
+                    maxWidth: '100%',
+                    borderRadius: '3px',
+                    background: colors.white,
+                    boxShadow: '0 2px 12px 0 rgb(0 0 0 / 10%)',
+                  }}
+                >
+                  <ul
+                    css={{
+                      margin: 0,
+                      padding: 0,
+                      listStyle: 'none',
+
+                      li: {
+                        display: 'grid',
+                        alignItems: 'center',
+                        gridTemplateColumns: 'auto 24px',
+                        width: '100%',
+                        color: colors.textLighten,
+                        lineHeight: '30px',
+                        padding: '0 0 0 1rem',
+                        cursor: 'default',
+
+                        ':hover': {
+                          color: colors.white,
+                          background: colors.primary,
+
+                          div: {
+                            visibility: 'visible',
+                            opacity: 100,
+                            transition: '',
+                          },
+                        },
+
+                        span: {
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          fontSize: '14px',
+                          whiteSpace: 'nowrap',
+                        },
+                      },
+                    }}
+                  >
+                    <h5 css={{ padding: '0 1rem', marginBottom: '0.5rem' }}>
+                      Collection List
+                    </h5>
+                    {Object.keys(collection).length ? (
+                      Object.keys(collection).map((name) => (
+                        <li key={name}>
+                          <span>{name}</span>
+
+                          {!Boolean(
+                            collection[name].find(
+                              (animeCollection: Anime) =>
+                                animeCollection.id === anime.id
+                            )
+                          ) ? (
+                            <div
+                              css={{
+                                marginLeft: '4px',
+                                visibility: 'hidden',
+                                opacity: 0,
+                                transition:
+                                  'visibility 0s, opacity 0.2s ease-in-out',
+                              }}
+                            >
+                              <FaPlus
+                                onClick={() =>
+                                  dispatch({
+                                    type: 'add',
+                                    payload: {
+                                      name,
+                                      anime,
+                                    },
+                                  })
+                                }
+                                size={14}
+                                css={{ cursor: 'pointer' }}
+                              />
+                            </div>
+                          ) : (
+                            <GoPrimitiveDot color={colors.green} size={18} />
+                          )}
+                        </li>
+                      ))
+                    ) : (
+                      <span
+                        css={{
+                          fontSize: '14px',
+                          color: colors.textLighten,
+                          padding: '0 1rem',
+                        }}
+                      >
+                        Empty.
+                      </span>
+                    )}
+                    <div
+                      css={{
+                        margin: '0.8rem 0',
+                        height: '1px',
+                        width: '100%',
+                        background: colors.textLight,
+                      }}
+                    ></div>
+                    <form
+                      css={{
+                        padding: '0 1rem',
+                      }}
+                      onSubmit={(e) => addToCollection(e, anime)}
+                    >
+                      <div
+                        css={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          borderRadius: '3px',
+                          border: `1px solid ${colors.textLight}`,
+                          padding: '6px 8px',
+                        }}
+                      >
+                        <button
+                          type="submit"
+                          css={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                          }}
+                        >
+                          <FaPlusCircle
+                            size={14}
+                            color={colors.primary}
+                            css={{ marginRight: '4px' }}
+                          />
+                        </button>
+                        <input
+                          id="name"
+                          type="text"
+                          placeholder="Add new collection"
+                          css={{
+                            width: '100%',
+                            outline: 'none',
+                            border: 'none',
+                            color: colors.textLighten,
+                            backgroundColor: 'inherit',
+                            transition: 'border 0.3s ease',
+
+                            ':focus': {
+                              borderColor: colors.text,
+                            },
+
+                            '::placeholder': {
+                              color: colors.textLight,
+                              fontSize: '11px',
+                            },
+                          }}
+                        />
+                      </div>
+                    </form>
+                  </ul>
+                </div>
+              )}
 
               <button
                 css={{
@@ -521,11 +712,8 @@ export default function AnimeDetailPage({ anime }: { anime: Anime }) {
                         css={{
                           position: 'relative',
                           display: 'inline-block',
-                          // flex: '1',
                           borderRadius: '3px',
-                          // marginRight: '30px',
                           height: '100px',
-
                           backgroundPosition: '50%',
                           backgroundRepeat: 'no-repeat',
                           backgroundSize: 'cover',

@@ -7,6 +7,8 @@ import HeaderNav from '@/components/header-nav';
 import BottomNav from '@/components/bottom-nav';
 import * as colors from '@/styles/colors';
 import { useBreakpoint } from 'utils/window';
+import { collectionReducer } from 'utils/collection';
+import { createContext, useEffect, useReducer } from 'react';
 
 const globalStyles = css({
   'html, body': {
@@ -44,19 +46,28 @@ type AppPropsWithHeaderProps = AppProps & {
   };
 };
 
+export const CollectionContext = createContext({});
+
 export default function MyApp({
   Component,
   pageProps,
 }: AppPropsWithHeaderProps) {
+  const [collection, dispatch] = useReducer(collectionReducer, {});
   const breakpoint = useBreakpoint();
   const headerProps = Component.headerProps || {};
+
+  useEffect(() => {
+    dispatch({ type: 'getAll' });
+  }, []);
 
   return (
     <>
       <Global styles={globalStyles} />
       <ApolloClientProvider>
         <HeaderNav {...headerProps} />
-        <Component {...pageProps} />
+        <CollectionContext.Provider value={[collection, dispatch]}>
+          <Component {...pageProps} />
+        </CollectionContext.Provider>
         <BottomNav />
         <div
           css={{

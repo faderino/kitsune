@@ -2,7 +2,7 @@ import { gql } from '@apollo/client';
 import { css } from '@emotion/react';
 import Head from 'next/head';
 import { GetStaticProps } from 'next';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Card from '@/components/anime/card';
 import { client } from 'utils/apollo';
@@ -13,6 +13,7 @@ import { FaChevronDown, FaSearch } from 'react-icons/fa';
 import { Button } from '@/components/lib';
 import { useBreakpoint } from 'utils/window';
 import { Anime, PageInfo } from 'types/anime';
+import { useCollection } from 'utils/collection';
 
 const container = css({
   margin: '75px auto 0 auto',

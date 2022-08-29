@@ -2,7 +2,10 @@ import { useState, useEffect } from 'react';
 import * as mq from '@/styles/media-queries';
 
 function useWindowDimensions() {
-  const [windowDimensions, setWindowDimensions] = useState({
+  const [windowDimensions, setWindowDimensions] = useState<{
+    width: undefined | number;
+    height: undefined | number;
+  }>({
     width: undefined,
     height: undefined,
   });
