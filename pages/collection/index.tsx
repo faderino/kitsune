@@ -4,8 +4,9 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
-import { FaPlus, FaTimes } from 'react-icons/fa';
+import { useRouter } from 'next/router';
+import { Dispatch, SetStateAction, useState } from 'react';
+import { FaPlus, FaTimes, FaTimesCircle } from 'react-icons/fa';
 import { Anime } from 'types/anime';
 import { useCollection } from 'utils/collection';
 import { useBreakpoint } from 'utils/window';
@@ -31,21 +32,65 @@ const Card = styled.div({
 
   ':hover': {
     transform: 'scale(1.03)',
+    button: {
+      visibility: 'visible',
+      opacity: '1',
+    },
   },
 });
 
 function CollectionCard({
   collection,
+  setShowDeleteModal,
+  setDeletePayload,
 }: {
   collection: { name: string; animeList: Anime[] };
+  setShowDeleteModal: Dispatch<SetStateAction<boolean>>;
+  setDeletePayload: Dispatch<SetStateAction<string>>;
 }) {
+  const router = useRouter();
   const anime = collection.animeList.length ? collection.animeList[0] : null;
 
+  const deleteAnime = () => {};
+
   return (
-    <Link href={`/collection/${collection.name}`}>
+    <div>
       <a>
         <Card>
+          <button
+            css={{
+              visibility: 'hidden',
+              opacity: '0',
+              position: 'absolute',
+              zIndex: '2',
+              top: '0.5rem',
+              right: '0.5rem',
+              background: 'transparent',
+              border: 'none',
+              padding: '0',
+              color: 'inherit',
+              transition: 'opacity 0.2s ease',
+            }}
+          >
+            <FaTimesCircle
+              onClick={() => {
+                setShowDeleteModal(true);
+                setDeletePayload(collection.name);
+              }}
+              css={{
+                margin: 'auto',
+                color: colors.magenta,
+                transition: 'color 0.15s ease',
+                cursor: 'pointer',
+                ':hover': {
+                  color: 'red',
+                },
+              }}
+              size={16}
+            />
+          </button>
           <Image
+            onClick={() => router.push(`/collection/${collection.name}`)}
             src={
               anime
                 ? anime.coverImage.extraLarge
@@ -63,7 +108,7 @@ function CollectionCard({
           </div>
         </Card>
       </a>
-    </Link>
+    </div>
   );
 }
 
@@ -173,13 +218,15 @@ const AddNewCollection = styled.button({
 export default function CollectionPage() {
   const [collection, dispatch] = useCollection();
   const breakpoint = useBreakpoint();
-  const [showModal, setShowModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
   const [collectionName, setCollectionName] = useState('Collection name');
   const [showError, setShowError] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deletePayload, setDeletePayload] = useState('');
 
   const closeModal = () => {
-    setShowModal(false);
+    setShowAddModal(false);
     setCollectionName('Collection name');
     setShowError(false);
   };
@@ -207,9 +254,15 @@ export default function CollectionPage() {
     closeModal();
   };
 
+  const deleteCollection = () => {
+    dispatch({ type: 'delete', payload: deletePayload });
+    setDeletePayload('');
+    setShowDeleteModal(false);
+  };
+
   return (
     <>
-      {showModal && (
+      {showAddModal && (
         <>
           <Modal onClick={() => closeModal()}></Modal>
           <ModalContent>
@@ -355,20 +408,86 @@ export default function CollectionPage() {
           </ModalContent>
         </>
       )}
-      <div css={header}></div>
+
+      {showDeleteModal && (
+        <>
+          <Modal onClick={() => setShowDeleteModal(false)}></Modal>
+          <ModalContent>
+            <ModalHeader>
+              <button
+                css={{
+                  background: 'transparent',
+                  border: 'none',
+                  padding: '0',
+                  color: 'inherit',
+                }}
+              >
+                <FaTimes
+                  onClick={() => setShowDeleteModal(false)}
+                  css={{
+                    margin: 'auto',
+                    transition: 'color 0.15s ease',
+                    cursor: 'pointer',
+                    ':hover': {
+                      color: colors.magenta,
+                    },
+                  }}
+                  size={16}
+                />
+              </button>
+              <h4 css={{ textAlign: 'center' }}>Confirm deletion</h4>
+            </ModalHeader>
+
+            <div
+              css={{
+                padding: '1rem',
+              }}
+            >
+              Are you sure you want to delete this Collection?
+            </div>
+
+            <ModalFooter>
+              <button css={button} onClick={() => setShowDeleteModal(false)}>
+                Cancel
+              </button>
+              <button
+                css={[
+                  button,
+                  {
+                    background: 'red',
+                    border: '1px solid red',
+                    borderRadius: '3px',
+                    color: colors.white,
+                  },
+                ]}
+                onClick={deleteCollection}
+              >
+                Delete
+              </button>
+            </ModalFooter>
+          </ModalContent>
+        </>
+      )}
+
+      <div css={header} />
+
       <main css={main}>
         <h2 css={{ marginBottom: '2.5rem', color: colors.textLight }}>
           Your collection
         </h2>
+
         <section css={grid}>
-          <AddNewCollection onClick={() => setShowModal(true)}>
+          <AddNewCollection onClick={() => setShowAddModal(true)}>
             <FaPlus size={breakpoint.xsAndUp ? 16 : 14} />
             <h4>Add a Collection</h4>
           </AddNewCollection>
+
           {Object.keys(collection).map((name) => (
             <CollectionCard
               key={name}
               collection={{ name, animeList: collection[name] }}
+              setShowDeleteModal={setShowDeleteModal}
+              setDeletePayload={setDeletePayload}
             />
           ))}
         </section>

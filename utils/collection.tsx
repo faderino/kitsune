@@ -25,6 +25,14 @@ const collectionReducer = (
 
       return newCollection;
     }
+    case 'delete': {
+      const newCollection = { ...state };
+      delete newCollection[action.payload];
+
+      window.localStorage.setItem('collection', JSON.stringify(newCollection));
+
+      return newCollection;
+    }
   }
 };
 
