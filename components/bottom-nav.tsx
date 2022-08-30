@@ -51,7 +51,7 @@ export default function BottomNav() {
             <span css={navText}>browse</span>
           </a>
         </Link>
-        <Link href={'/collections'}>
+        <Link href={'/collection'}>
           <a
             style={{
               display: 'flex',

@@ -14,6 +14,7 @@ import { useBreakpoint } from 'utils/window';
 import React, { useEffect, useState } from 'react';
 import { useCollection } from 'utils/collection';
 import { GoPrimitiveDot } from 'react-icons/go';
+import { useRouter } from 'next/router';
 
 const banner = css({
   backgroundPosition: '50% 35%',
@@ -183,8 +184,8 @@ function DetailListItem({
 
 export default function AnimeDetailPage({ anime }: { anime: Anime }) {
   const [collection, dispatch] = useCollection();
+  const router = useRouter();
   const [showDropdown, toggleDropdown] = useState(false);
-  const [showAlert, setShowAlert] = useState(false);
 
   const getEmojiAndColor = (score: number) => {
     if (score >= 80) {
@@ -313,6 +314,11 @@ export default function AnimeDetailPage({ anime }: { anime: Anime }) {
                           textOverflow: 'ellipsis',
                           fontSize: '14px',
                           whiteSpace: 'nowrap',
+                          cursor: 'pointer',
+
+                          ':hover': {
+                            textDecoration: 'underline',
+                          },
                         },
                       },
                     }}
@@ -321,45 +327,97 @@ export default function AnimeDetailPage({ anime }: { anime: Anime }) {
                       Collection List
                     </h5>
                     {Object.keys(collection).length ? (
-                      Object.keys(collection).map((name) => (
-                        <li key={name}>
-                          <span>{name}</span>
-
-                          {!Boolean(
+                      [
+                        ...Object.keys(collection).filter((name) =>
+                          Boolean(
                             collection[name].find(
                               (animeCollection: Anime) =>
                                 animeCollection.id === anime.id
                             )
-                          ) ? (
+                          )
+                        ),
+                        ...Object.keys(collection).filter(
+                          (name) =>
+                            !Boolean(
+                              collection[name].find(
+                                (animeCollection: Anime) =>
+                                  animeCollection.id === anime.id
+                              )
+                            )
+                        ),
+                        ,
+                      ].map((name, i) => {
+                        if (i < 4) {
+                          return (
+                            <li key={name}>
+                              <span
+                                onClick={() =>
+                                  router.push(`/collection/${name}`)
+                                }
+                              >
+                                {name}
+                              </span>
+
+                              {!Boolean(
+                                collection[name!].find(
+                                  (animeCollection: Anime) =>
+                                    animeCollection.id === anime.id
+                                )
+                              ) ? (
+                                <div
+                                  css={{
+                                    marginLeft: '4px',
+                                    visibility: 'hidden',
+                                    opacity: 0,
+                                    transition:
+                                      'visibility 0s, opacity 0.2s ease-in-out',
+                                  }}
+                                >
+                                  <FaPlus
+                                    onClick={() => {
+                                      dispatch({
+                                        type: 'add',
+                                        payload: {
+                                          name,
+                                          anime,
+                                        },
+                                      });
+                                      toggleDropdown(!showDropdown);
+                                    }}
+                                    size={14}
+                                    css={{ cursor: 'pointer' }}
+                                  />
+                                </div>
+                              ) : (
+                                <GoPrimitiveDot
+                                  color={colors.green}
+                                  size={18}
+                                />
+                              )}
+                            </li>
+                          );
+                        } else if (i === 4) {
+                          return (
                             <div
+                              onClick={() => router.push(`/collection`)}
                               css={{
-                                marginLeft: '4px',
-                                visibility: 'hidden',
-                                opacity: 0,
-                                transition:
-                                  'visibility 0s, opacity 0.2s ease-in-out',
+                                margin: '0 auto',
+                                padding: '0.05rem 1rem',
+                                fontSize: '0.8rem',
+                                fontWeight: '500',
+                                textAlign: 'center',
+                                cursor: 'pointer',
+
+                                ':hover': {
+                                  textDecoration: 'underline',
+                                },
                               }}
                             >
-                              <FaPlus
-                                onClick={() => {
-                                  dispatch({
-                                    type: 'add',
-                                    payload: {
-                                      name,
-                                      anime,
-                                    },
-                                  });
-                                  toggleDropdown(!showDropdown);
-                                }}
-                                size={14}
-                                css={{ cursor: 'pointer' }}
-                              />
+                              See more...
                             </div>
-                          ) : (
-                            <GoPrimitiveDot color={colors.green} size={18} />
-                          )}
-                        </li>
-                      ))
+                          );
+                        }
+                      })
                     ) : (
                       <span
                         css={{

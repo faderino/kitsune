@@ -33,6 +33,16 @@ const collectionReducer = (
 
       return newCollection;
     }
+    case 'deleteAnime': {
+      const newCollection = { ...state };
+      newCollection[action.payload.name] = newCollection[
+        action.payload.name
+      ].filter((anime) => anime.id !== action.payload.animeId);
+
+      window.localStorage.setItem('collection', JSON.stringify(newCollection));
+
+      return newCollection;
+    }
   }
 };
 

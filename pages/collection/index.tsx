@@ -41,8 +41,6 @@ function CollectionCard({
   const router = useRouter();
   const anime = collection.animeList.length ? collection.animeList[0] : null;
 
-  const deleteAnime = () => {};
-
   return (
     <button style={{ background: 'none', border: 'none', textAlign: 'start' }}>
       <Card>
@@ -60,8 +58,8 @@ function CollectionCard({
         ></div>
         <button
           css={{
-            visibility: 'hidden',
-            opacity: '0',
+            visibility: 'visible',
+            opacity: '1',
             position: 'absolute',
             zIndex: '2',
             top: '0.5rem',
@@ -71,6 +69,11 @@ function CollectionCard({
             padding: '0',
             color: 'inherit',
             transition: 'opacity 0.2s ease',
+
+            [mq.md]: {
+              visibility: 'hidden',
+              opacity: '0',
+            },
           }}
         >
           <FaTimesCircle
@@ -174,7 +177,7 @@ const main = css({
 const grid = css({
   display: 'grid',
   gridTemplateColumns: '1fr',
-  gap: '40px',
+  gap: '20px 16px',
 
   [mq.xs]: {
     gridTemplateColumns: 'repeat(2, 1fr)',
@@ -186,10 +189,12 @@ const grid = css({
 
   [mq.md]: {
     gridTemplateColumns: 'repeat(4, 1fr)',
+    gap: '30px 24px',
   },
 
   [mq.lg]: {
     gridTemplateColumns: 'repeat(5, 1fr)',
+    gap: '40px 36px',
   },
 });
 

@@ -4,7 +4,7 @@ import Head from 'next/head';
 import { GetStaticProps } from 'next';
 import { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import Card from '@/components/anime/card';
+import AnimeCard from '@/components/anime/card';
 import { client } from 'utils/apollo';
 import * as colors from '@/styles/colors';
 import * as mq from '@/styles/media-queries';
@@ -14,6 +14,7 @@ import { Button } from '@/components/lib';
 import { useBreakpoint } from 'utils/window';
 import { Anime, PageInfo } from 'types/anime';
 import { useCollection } from 'utils/collection';
+import { grid } from '@/styles/lib';
 
 const container = css({
   margin: '75px auto 0 auto',
@@ -29,39 +30,6 @@ const container = css({
 
   [mq.xl]: {
     maxWidth: '1240px',
-  },
-});
-
-const grid = css({
-  display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))',
-  justifyContent: 'center',
-  gap: '20px 12px',
-  padding: '25px 0',
-
-  [mq.xs]: {
-    gridTemplateColumns: 'repeat(auto-fill, minmax(105px, 1fr))',
-    gap: '24px 16px',
-  },
-
-  [mq.sm]: {
-    gridTemplateColumns: 'repeat(auto-fill, minmax(125px, 1fr))',
-    gap: '32px 24px',
-  },
-
-  [mq.md]: {
-    gridTemplateColumns: 'repeat(auto-fill, minmax(145px, 1fr))',
-    gap: '40px 32px',
-  },
-
-  [mq.lg]: {
-    gridTemplateColumns: 'repeat(auto-fill, minmax(155px, 1fr))',
-    gap: '40px 32px',
-  },
-
-  [mq.xl]: {
-    gridTemplateColumns: 'repeat(auto-fill, minmax(165px, 1fr))',
-    gap: '40px 32px',
   },
 });
 
@@ -171,7 +139,7 @@ export default function Home({
 
       <main css={grid}>
         {animes.map((anime) => (
-          <Card key={anime.id} anime={anime} />
+          <AnimeCard key={anime.id} anime={anime} />
         ))}
       </main>
     </InfiniteScroll>
