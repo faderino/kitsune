@@ -4,7 +4,9 @@ Discover and browse Anime. Browse list of anime, create a collection list for yo
 
 Kitsune is build with Nextjs, Emotion is used for styling and anime data is fetched from Anilist GraphQL API.
 
-Live version of the app can be found [here](https://kitsune-two.vercel.app/).
+## Deployed Link
+
+Live version of the app can be found here [https://kitsune-two.vercel.app/](https://kitsune-two.vercel.app/).
 
 ## How to Use
 
