@@ -2,7 +2,6 @@ import { css, Global } from '@emotion/react';
 import type { AppProps } from 'next/app';
 import type { NextPage } from 'next';
 import type { HeaderProps } from '@/components/header-nav';
-import { ApolloClientProvider } from 'utils/apollo';
 import HeaderNav from '@/components/header-nav';
 import BottomNav from '@/components/bottom-nav';
 import * as colors from '@/styles/colors';
@@ -63,18 +62,16 @@ export default function MyApp({
   return (
     <>
       <Global styles={globalStyles} />
-      <ApolloClientProvider>
-        <HeaderNav {...headerProps} />
-        <CollectionContext.Provider value={[collection, dispatch]}>
-          <Component {...pageProps} />
-        </CollectionContext.Provider>
-        <BottomNav />
-        <div
-          css={{
-            paddingTop: breakpoint.mdAndDown ? '80px' : '0',
-          }}
-        ></div>
-      </ApolloClientProvider>
+      <HeaderNav {...headerProps} />
+      <CollectionContext.Provider value={[collection, dispatch]}>
+        <Component {...pageProps} />
+      </CollectionContext.Provider>
+      <BottomNav />
+      <div
+        css={{
+          paddingTop: breakpoint.mdAndDown ? '80px' : '0',
+        }}
+      ></div>
     </>
   );
 }

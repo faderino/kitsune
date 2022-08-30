@@ -1,7 +1,7 @@
 import * as colors from '@/styles/colors';
-import Image from 'next/image';
+import { Character } from 'types/anime';
 
-export default function CharacterCard({ character }) {
+export default function CharacterCard({ character }: { character: Character }) {
   return (
     <div
       css={{

@@ -1,14 +1,20 @@
 import * as colors from '@/styles/colors';
+import {
+  button,
+  Modal,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+} from '@/styles/lib';
 import * as mq from '@/styles/media-queries';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { FaPlus, FaTimes, FaTimesCircle } from 'react-icons/fa';
 import { Anime } from 'types/anime';
-import { useCollection } from 'utils/collection';
+import { useCollection, useNewCollection } from 'utils/collection';
 import { useBreakpoint } from 'utils/window';
 
 const Card = styled.div({
@@ -114,55 +120,6 @@ function CollectionCard({
   );
 }
 
-const Modal = styled.div({
-  position: 'fixed',
-  zIndex: '999',
-  height: '100vh',
-  width: '100vw',
-  background: `${colors.dark}AB`,
-});
-
-const ModalContent = styled.div({
-  position: 'absolute',
-  zIndex: '1000',
-  display: 'grid',
-  gridTemplateRows: '60px auto 60px',
-  width: '100%',
-  maxWidth: '480px',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  borderRadius: '4px',
-  background: colors.base,
-});
-
-const ModalHeader = styled.div({
-  display: 'grid',
-  gridTemplateColumns: '32px auto 32px',
-  alignItems: 'center',
-  padding: '1rem',
-  height: '60px',
-  color: colors.textLight,
-  background: colors.dark,
-});
-
-const ModalFooter = styled.div({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'end',
-  gap: '20px',
-  padding: '0 1rem',
-  borderTop: `1px solid ${colors.textLight}`,
-});
-
-const button = css({
-  padding: '8px 12px',
-  minWidth: '65px',
-  background: 'transparent',
-  border: `1px solid ${colors.text}`,
-  borderRadius: '3px',
-});
-
 const header = css({
   height: '342px',
   background: colors.dark,
@@ -221,11 +178,16 @@ const AddNewCollection = styled.button({
 
 export default function CollectionPage() {
   const [collection, dispatch] = useCollection();
+  const {
+    collectionName,
+    setCollectionName,
+    showError,
+    setShowError,
+    errorMsg,
+    validate,
+  } = useNewCollection();
   const breakpoint = useBreakpoint();
   const [showAddModal, setShowAddModal] = useState(false);
-  const [collectionName, setCollectionName] = useState('Collection name');
-  const [showError, setShowError] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deletePayload, setDeletePayload] = useState('');
 
@@ -236,24 +198,8 @@ export default function CollectionPage() {
   };
 
   const addNewCollection = () => {
-    if (Object.keys(collection).includes(collectionName)) {
-      setErrorMsg('Name already used!');
-      setShowError(true);
-      return;
-    }
-    for (const c of collectionName) {
-      if (
-        ('a'.charCodeAt(0) <= c.charCodeAt(0) &&
-          c.charCodeAt(0) <= 'z'.charCodeAt(0)) ||
-        ('A'.charCodeAt(0) <= c.charCodeAt(0) &&
-          c.charCodeAt(0) <= 'Z'.charCodeAt(0))
-      ) {
-        continue;
-      }
-      setErrorMsg('Cannot use special characters');
-      setShowError(true);
-      return;
-    }
+    const isValidName = validate(collection);
+    if (!isValidName) return;
     dispatch({ type: 'add', payload: { name: collectionName } });
     closeModal();
   };
@@ -447,7 +393,7 @@ export default function CollectionPage() {
                 padding: '1rem',
               }}
             >
-              Are you sure you want to delete this Collection?
+              Are you sure you want to delete "{deletePayload}"?
             </div>
 
             <ModalFooter>

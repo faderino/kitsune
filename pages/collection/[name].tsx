@@ -4,9 +4,17 @@ import { Anime } from 'types/anime';
 import { useCollection } from 'utils/collection';
 import * as colors from '@/styles/colors';
 import * as mq from '@/styles/media-queries';
-import { grid } from '@/styles/lib';
+import {
+  button,
+  grid,
+  Modal,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+} from '@/styles/lib';
 import AnimeCard from '@/components/anime/card';
-import { FaTimesCircle } from 'react-icons/fa';
+import { FaTimes, FaTimesCircle } from 'react-icons/fa';
+import { useState } from 'react';
 
 const header = css({
   position: 'relative',
@@ -26,9 +34,82 @@ export default function CollectionDetailPage() {
   const [collection, dispatch] = useCollection();
   const router = useRouter();
   const animeList: Anime[] = collection[router.query.name];
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deletePayload, setDeletePayload] = useState<{
+    id?: number;
+    title: string;
+  }>({ id: undefined, title: '' });
 
+  const deleteAnime = () => {
+    dispatch({
+      type: 'deleteAnime',
+      payload: { name: router.query.name, animeId: deletePayload.id },
+    });
+    setShowDeleteModal(false);
+    setDeletePayload({ id: undefined, title: '' });
+  };
   return (
     <>
+      {showDeleteModal && (
+        <>
+          <Modal onClick={() => setShowDeleteModal(false)}></Modal>
+          <ModalContent>
+            <ModalHeader>
+              <button
+                css={{
+                  background: 'transparent',
+                  border: 'none',
+                  padding: '0',
+                  color: 'inherit',
+                }}
+              >
+                <FaTimes
+                  onClick={() => setShowDeleteModal(false)}
+                  css={{
+                    margin: 'auto',
+                    transition: 'color 0.15s ease',
+                    cursor: 'pointer',
+                    ':hover': {
+                      color: colors.magenta,
+                    },
+                  }}
+                  size={16}
+                />
+              </button>
+              <h4 css={{ textAlign: 'center' }}>Confirm deletion</h4>
+            </ModalHeader>
+
+            <div
+              css={{
+                padding: '1rem',
+              }}
+            >
+              Are you sure you want to delete "{deletePayload.title}"?
+            </div>
+
+            <ModalFooter>
+              <button css={button} onClick={() => setShowDeleteModal(false)}>
+                Cancel
+              </button>
+              <button
+                css={[
+                  button,
+                  {
+                    background: 'red',
+                    border: '1px solid red',
+                    borderRadius: '3px',
+                    color: colors.white,
+                  },
+                ]}
+                onClick={deleteAnime}
+              >
+                Delete
+              </button>
+            </ModalFooter>
+          </ModalContent>
+        </>
+      )}
+
       <div css={header}>
         <div
           style={{
@@ -76,7 +157,7 @@ export default function CollectionDetailPage() {
 
         <div css={grid}>
           {animeList?.length &&
-            animeList.map((anime) => (
+            animeList.map((anime: Anime) => (
               <div
                 css={{
                   position: 'relative',
@@ -91,12 +172,17 @@ export default function CollectionDetailPage() {
               >
                 <AnimeCard key={anime.id} anime={anime} />
                 <button
-                  onClick={() =>
-                    dispatch({
-                      type: 'deleteAnime',
-                      payload: { name: router.query.name, animeId: anime.id },
-                    })
-                  }
+                  onClick={() => {
+                    setShowDeleteModal(true);
+                    setDeletePayload((state) => ({
+                      ...state,
+                      id: anime.id,
+                      title:
+                        anime.title.english ||
+                        anime.title.native ||
+                        anime.title.romaji,
+                    }));
+                  }}
                   css={{
                     background: 'transparent',
                     position: 'absolute',

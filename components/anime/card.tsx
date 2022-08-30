@@ -3,7 +3,6 @@ import Image from 'next/image';
 import styled from '@emotion/styled';
 import { css, keyframes } from '@emotion/react';
 import * as colors from '@/styles/colors';
-import * as mq from '@/styles/media-queries';
 import { Anime } from 'types/anime';
 
 const cardAnimation = keyframes({

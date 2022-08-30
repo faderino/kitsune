@@ -10,7 +10,6 @@ import * as colors from '@/styles/colors';
 import * as mq from '@/styles/media-queries';
 import { FilterGroup, FilterInput, SearchInput } from '@/components/filter';
 import { FaChevronDown, FaSearch } from 'react-icons/fa';
-import { Button } from '@/components/lib';
 import { useBreakpoint } from 'utils/window';
 import { Anime, PageInfo } from 'types/anime';
 import { useCollection } from 'utils/collection';

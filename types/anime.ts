@@ -37,6 +37,37 @@ export interface Studio {
   name: string;
   isAnimationStudio: boolean;
 }
+export interface Character {
+  voiceActors: {
+    image: {
+      medium: string;
+    };
+    language: string;
+    name: {
+      full: string;
+      native: string;
+    };
+    id: number;
+  }[];
+  role: string;
+  node: {
+    image: {
+      medium: string;
+    };
+    name: {
+      first: string;
+      last: string;
+      full: string;
+      native: string;
+    };
+    id: number;
+  };
+  id: number;
+}
+
+export interface Characters {
+  edges: Character[];
+}
 
 export interface Anime {
   id: number;

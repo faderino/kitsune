@@ -2,7 +2,6 @@ import Link from 'next/link';
 import { css } from '@emotion/react';
 import { FaSearch } from 'react-icons/fa';
 import { BsCollectionPlayFill } from 'react-icons/bs';
-
 import * as colors from '@/styles/colors';
 import * as mq from '@/styles/media-queries';
 

@@ -3,16 +3,14 @@ import { gql } from '@apollo/client';
 import { css } from '@emotion/react';
 import * as colors from '@/styles/colors';
 import * as mq from '@/styles/media-queries';
-import { GetServerSideProps, GetStaticProps } from 'next';
+import { GetServerSideProps } from 'next';
 import Image from 'next/image';
 import { FaChevronDown, FaHeart, FaPlus, FaPlusCircle } from 'react-icons/fa';
-import { Button } from '@/components/lib';
 import { Anime } from 'types/anime';
 import CharacterCard from '@/components/anime/character-card';
 import Card from '@/components/anime/card';
-import { useBreakpoint } from 'utils/window';
-import React, { useEffect, useState } from 'react';
-import { useCollection } from 'utils/collection';
+import React, { useState } from 'react';
+import { useCollection, useNewCollection } from 'utils/collection';
 import { GoPrimitiveDot } from 'react-icons/go';
 import { useRouter } from 'next/router';
 
@@ -185,6 +183,7 @@ function DetailListItem({
 export default function AnimeDetailPage({ anime }: { anime: Anime }) {
   const [collection, dispatch] = useCollection();
   const router = useRouter();
+  const { showError, setShowError, errorMsg, validate } = useNewCollection();
   const [showDropdown, toggleDropdown] = useState(false);
 
   const getEmojiAndColor = (score: number) => {
@@ -205,6 +204,9 @@ export default function AnimeDetailPage({ anime }: { anime: Anime }) {
   ) => {
     e.preventDefault();
     const name = e.target.elements.name.value;
+    if (!name) return;
+    const isValidName = validate(collection, name);
+    if (!isValidName) return;
     dispatch({
       type: 'add',
       payload: {
@@ -214,6 +216,7 @@ export default function AnimeDetailPage({ anime }: { anime: Anime }) {
     });
     e.target.elements.name.value = '';
     toggleDropdown(!showDropdown);
+    setShowError(false);
   };
 
   return (
@@ -489,6 +492,16 @@ export default function AnimeDetailPage({ anime }: { anime: Anime }) {
                           }}
                         />
                       </div>
+                      {showError && (
+                        <div
+                          css={{
+                            fontSize: '0.7rem',
+                            color: 'red',
+                          }}
+                        >
+                          {errorMsg}
+                        </div>
+                      )}
                     </form>
                   </ul>
                 </div>
