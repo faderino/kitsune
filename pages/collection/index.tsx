@@ -18,17 +18,7 @@ const Card = styled.div({
   color: colors.white,
   overflow: 'hidden',
   transition: 'transform .3s ease-in-out',
-
-  ':before': {
-    position: 'absolute',
-    content: '""',
-    zIndex: '1',
-    top: '0',
-    left: '0',
-    height: '100%',
-    width: '100%',
-    background: 'rgba(41, 41, 41, 0.65)',
-  },
+  cursor: 'pointer',
 
   ':hover': {
     transform: 'scale(1.03)',
@@ -54,61 +44,70 @@ function CollectionCard({
   const deleteAnime = () => {};
 
   return (
-    <div>
-      <a>
-        <Card>
-          <button
-            css={{
-              visibility: 'hidden',
-              opacity: '0',
-              position: 'absolute',
-              zIndex: '2',
-              top: '0.5rem',
-              right: '0.5rem',
-              background: 'transparent',
-              border: 'none',
-              padding: '0',
-              color: 'inherit',
-              transition: 'opacity 0.2s ease',
+    <button style={{ background: 'none', border: 'none', textAlign: 'start' }}>
+      <Card>
+        <div
+          onClick={() => router.push(`/collection/${collection.name}`)}
+          css={{
+            position: 'absolute',
+            zIndex: '1',
+            top: '0',
+            left: '0',
+            height: '100%',
+            width: '100%',
+            background: 'rgba(41, 41, 41, 0.65)',
+          }}
+        ></div>
+        <button
+          css={{
+            visibility: 'hidden',
+            opacity: '0',
+            position: 'absolute',
+            zIndex: '2',
+            top: '0.5rem',
+            right: '0.5rem',
+            background: 'transparent',
+            border: 'none',
+            padding: '0',
+            color: 'inherit',
+            transition: 'opacity 0.2s ease',
+          }}
+        >
+          <FaTimesCircle
+            onClick={() => {
+              setShowDeleteModal(true);
+              setDeletePayload(collection.name);
             }}
-          >
-            <FaTimesCircle
-              onClick={() => {
-                setShowDeleteModal(true);
-                setDeletePayload(collection.name);
-              }}
-              css={{
-                margin: 'auto',
-                color: colors.magenta,
-                transition: 'color 0.15s ease',
-                cursor: 'pointer',
-                ':hover': {
-                  color: 'red',
-                },
-              }}
-              size={16}
-            />
-          </button>
-          <Image
-            onClick={() => router.push(`/collection/${collection.name}`)}
-            src={
-              anime
-                ? anime.coverImage.extraLarge
-                : 'https://s4.anilist.co/file/anilistcdn/user/avatar/large/default.png'
-            }
-            alt={anime ? anime.title.english : 'Anime'}
-            layout="fill"
-            objectFit="cover"
+            css={{
+              margin: 'auto',
+              color: colors.magenta,
+              transition: 'color 0.15s ease',
+              cursor: 'pointer',
+              ':hover': {
+                color: 'red',
+              },
+            }}
+            size={16}
           />
-          <div css={{ position: 'relative', zIndex: 2, fontWeight: 'bold' }}>
-            {collection.name}
-          </div>
-          <div css={{ position: 'relative', zIndex: 2 }}>
-            {collection.animeList.length} Anime
-          </div>
-        </Card>
-      </a>
-    </div>
+        </button>
+        <Image
+          src={
+            anime
+              ? anime.coverImage.extraLarge
+              : 'https://s4.anilist.co/file/anilistcdn/user/avatar/large/default.png'
+          }
+          alt={anime ? anime.title.english : 'Anime'}
+          layout="fill"
+          objectFit="cover"
+        />
+        <div css={{ position: 'relative', zIndex: 2, fontWeight: 'bold' }}>
+          {collection.name}
+        </div>
+        <div css={{ position: 'relative', zIndex: 2 }}>
+          {collection.animeList.length} Anime
+        </div>
+      </Card>
+    </button>
   );
 }
 
