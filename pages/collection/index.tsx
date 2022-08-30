@@ -9,6 +9,7 @@ import {
 import * as mq from '@/styles/media-queries';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { Dispatch, SetStateAction, useState } from 'react';
@@ -212,6 +213,11 @@ export default function CollectionPage() {
 
   return (
     <>
+      <Head>
+        <title>Collection</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
       {showAddModal && (
         <>
           <Modal onClick={() => closeModal()}></Modal>

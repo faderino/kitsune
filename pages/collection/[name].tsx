@@ -15,6 +15,7 @@ import {
 import AnimeCard from '@/components/anime/card';
 import { FaTimes, FaTimesCircle } from 'react-icons/fa';
 import { useState } from 'react';
+import Head from 'next/head';
 
 const header = css({
   position: 'relative',
@@ -50,6 +51,11 @@ export default function CollectionDetailPage() {
   };
   return (
     <>
+      <Head>
+        <title>Collection | {router.query.name}</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
       {showDeleteModal && (
         <>
           <Modal onClick={() => setShowDeleteModal(false)}></Modal>

@@ -13,6 +13,7 @@ import React, { useState } from 'react';
 import { useCollection, useNewCollection } from 'utils/collection';
 import { GoPrimitiveDot } from 'react-icons/go';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 
 const banner = css({
   backgroundPosition: '50% 35%',
@@ -221,6 +222,13 @@ export default function AnimeDetailPage({ anime }: { anime: Anime }) {
 
   return (
     <>
+      <Head>
+        <title>
+          {anime.title.english || anime.title.native || anime.title.romaji}
+        </title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
       <div
         css={banner}
         style={{ backgroundImage: `url(${anime.bannerImage})` }}
