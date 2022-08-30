@@ -204,6 +204,7 @@ export default function AnimeDetailPage({ anime }: { anime: Anime }) {
     anime: Anime
   ) => {
     e.preventDefault();
+    // @ts-ignore
     const name = e.target.elements.name.value;
     if (!name) return;
     const isValidName = validate(collection, name);
@@ -215,6 +216,7 @@ export default function AnimeDetailPage({ anime }: { anime: Anime }) {
         anime,
       },
     });
+    // @ts-ignore
     e.target.elements.name.value = '';
     toggleDropdown(!showDropdown);
     setShowError(false);
@@ -410,6 +412,7 @@ export default function AnimeDetailPage({ anime }: { anime: Anime }) {
                         } else if (i === 4) {
                           return (
                             <div
+                              key={i}
                               onClick={() => router.push(`/collection`)}
                               css={{
                                 margin: '0 auto',
@@ -845,6 +848,7 @@ export default function AnimeDetailPage({ anime }: { anime: Anime }) {
                       return (
                         <Card
                           key={anime.node.id}
+                          // @ts-ignore
                           anime={anime.node.mediaRecommendation}
                         />
                       );

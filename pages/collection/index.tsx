@@ -399,7 +399,7 @@ export default function CollectionPage() {
                 padding: '1rem',
               }}
             >
-              Are you sure you want to delete "{deletePayload}"?
+              Are you sure you want to delete &ldquo;{deletePayload}&ldquo;?
             </div>
 
             <ModalFooter>

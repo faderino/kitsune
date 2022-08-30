@@ -57,6 +57,7 @@ function useCollection() {
     throw new Error('useCollection must be used within CollectionProvider');
   }
 
+  // @ts-ignore
   const [collection, dispatch] = context;
 
   return [collection, dispatch];

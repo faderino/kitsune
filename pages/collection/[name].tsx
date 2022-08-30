@@ -34,6 +34,7 @@ const main = css({
 export default function CollectionDetailPage() {
   const [collection, dispatch] = useCollection();
   const router = useRouter();
+  // @ts-ignore
   const animeList: Anime[] = collection[router.query.name];
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deletePayload, setDeletePayload] = useState<{
@@ -90,7 +91,8 @@ export default function CollectionDetailPage() {
                 padding: '1rem',
               }}
             >
-              Are you sure you want to delete "{deletePayload.title}"?
+              Are you sure you want to delete &ldquo;{deletePayload.title}
+              &ldquo;?
             </div>
 
             <ModalFooter>
@@ -165,6 +167,7 @@ export default function CollectionDetailPage() {
           {animeList?.length &&
             animeList.map((anime: Anime) => (
               <div
+                key={anime.id}
                 css={{
                   position: 'relative',
 

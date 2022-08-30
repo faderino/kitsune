@@ -1,8 +1,10 @@
-# Next.js + Jest
+# Kitsune
 
-This example shows how to configure Jest to work with Next.js.
+Discover and browse Anime. Browse list of anime, create a collection list for your anime, and add your favourite anime to the collection.
 
-This includes Next.js' built-in support for Global CSS, CSS Modules and TypeScript.
+Kitsune is build with Nextjs, Emotion is used for styling and anime data is fetched from Anilist GraphQL API.
+
+Live version of the app can be found [here].
 
 ## How to Use
 
@@ -20,10 +22,4 @@ yarn create next-app --example with-jest with-jest-app
 
 ```bash
 pnpm create next-app --example with-jest with-jest-app
-```
-
-## Run Jest Tests
-
-```bash
-npm test
 ```
